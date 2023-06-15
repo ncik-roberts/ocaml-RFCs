@@ -307,6 +307,20 @@ let rec find_matching_case ctx value cases =
   | _ :: cases -> find_matching_case ctx value cases
 ```
 
+## Prior art
+
+  * [Lionel Parreaux's "The Ultimate Conditional Syntax"][UCS] develops similar ideas with an alternate syntax.
+  * Gabriel Scherer started a discussion on related ideas in a [2019 blog post][gasche]. This RFC is influenced by ideas developed there.
+  * Work has been done on pattern guards for Successor ML, [see here](https://github.com/JohnReppy/compiling-pattern-guards). The repo has some detail about a compilation scheme.
+  * Wrapping match cases with some sort of bracket was first proposed in [#715][715] and PR'ed in [#722][722]. [#722][722] was closed in favor of [#716][716], but this PR was also closed. Reception of bracketed cases was mixed &mdash; some people encouraged just wrapping the entire `match` expression in parentheses.
+  * [Haskell has pattern guards](https://www.haskell.org/onlinereport/haskell2010/haskellch3.html#x8-460003.13). It uses `,` instead of `when` as a separator for nested guards. Its syntax places patterns to the left of the scrutinized expression.
+
+[UCS]: https://www.cse.ust.hk/~parreaux/ucs_v1.2.pdf
+[gasche]: https://discuss.ocaml.org/t/musings-on-extended-pattern-matching-syntaxes/3600
+[722]: https://github.com/ocaml/ocaml/pull/722
+[715]: https://github.com/ocaml/ocaml/pull/715
+[716]: https://github.com/ocaml/ocaml/pull/716
+
 ## Exhaustivity and fallthrough
 
 In this RFC, the cases in a pattern-guarded RHS can be non-exhaustive (and, in
@@ -330,17 +344,6 @@ I'll summarize the existing arguments:
     rec f () = ...` where `f` is used nowhere in its definition.
   - (In favor of warning for *non*-exhaustive matches.) It's a common programming error
     to write a non-exhaustive match where you intend to match exhaustively.
-
-## Prior art
-
-  * [Lionel Parreaux's "The Ultimate Conditional Syntax"][UCS] develops similar ideas with an alternate syntax.
-  * Gabriel Scherer started a discussion on related ideas in a [2019 blog post][gasche]. This RFC is influenced by ideas developed there.
-  * Work has been done on pattern guards for Successor ML, [see here](https://github.com/JohnReppy/compiling-pattern-guards). The repo has some detail about a compilation scheme.
-  * Wrapping match cases with some sort of bracket was first proposed in #715 and PR'ed in #722. #722 was closed in favor of #716, but this PR was also closed. Reception of bracketed cases was mixed &mdash; some people encouraged just wrapping the entire `match` expression in parentheses.
-  * [Haskell has pattern guards](https://www.haskell.org/onlinereport/haskell2010/haskellch3.html#x8-460003.13). It uses `,` instead of `when` as a separator for nested guards. Its syntax places patterns to the left of the scrutinized expression.
-
-[UCS]: https://www.cse.ust.hk/~parreaux/ucs_v1.2.pdf
-[gasche]: https://discuss.ocaml.org/t/musings-on-extended-pattern-matching-syntaxes/3600
 
 ## Alternative syntaxes
 
@@ -369,7 +372,7 @@ regardless you can look a little further ahead for a `<-` vs. a `=` to
 distinguish a pattern guard from a let-expression.
 
 The main downside with this syntax is that it's not
-obvious how to add a multiway match as an allowable construct for a guarded RHS.
+obvious how to allow multiple cases in a pattern-guarded RHS.
 
 Similarly, I discarded these options:
   * `'when' 'let' pattern '=' expression '->' expression`. (Also, `=` looks like a total match, but we explicitly want to allow partial matches here.
@@ -455,9 +458,9 @@ let add_lookup env val_opt var1 var2 =
   | _ -> 0
 ```
 
-**Form of "pattern guard":** `'when' expr 'match' pat`
-**Form of boolean guard:** `'when' expr`
-**Form of single-case-only guarded RHSes:** `guard+ -> expr`
+**Form of "pattern guard":** `'when' expr 'match' pat`\
+**Form of boolean guard:** `'when' expr`\
+**Form of single-case-only guarded RHSes:** `guard+ -> expr`\
 **Can pattern-guarded RHSes have multiple cases?** Yes.
 
 ### Haskell
@@ -475,9 +478,9 @@ addLookup env val_opt var1 var2 =
     _ -> 0
 ```
 
-**Form of pattern guard:** `pat '<-' expr`
-**Form of boolean guard:** `expr`
-**Form of single-case-only guarded RHS:** `'|' guard+ '->' expr` (where guards are separated by `,`)
+**Form of pattern guard:** `pat '<-' expr`\
+**Form of boolean guard:** `expr`\
+**Form of single-case-only guarded RHS:** `'|' guard+ '->' expr` (where guards are separated by `,`)\
 **Can pattern-guarded RHSes have multiple cases?** No.
 
 This syntax has a major flaw. It is difficult to imagine what the syntax for a
@@ -517,8 +520,8 @@ fun add_lookup env val_opt var1 var2 =
   | _ => 0
 ```
 
-**Form of "pattern-guarded pattern":** `pat 'with' pat '=' expr`
-**Form of "boolean-guarded pattern":** `pat 'if' expr`
+**Form of "pattern-guarded pattern":** `pat 'with' pat '=' expr`\
+**Form of "boolean-guarded pattern":** `pat 'if' expr`\
 **Can pattern-guarded RHSes have multiple cases?** No.
 
 The syntax extends the *pattern* grammar with `p with p' = e` (and `p if e`),
