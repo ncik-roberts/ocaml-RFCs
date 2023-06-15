@@ -355,12 +355,12 @@ several options against the one ultimately proposed in this RFC.
 Here's what this syntax would look like:
 
 ```ocaml
-let add_lookup env val_opt var1 var2 =
-  match val_opt with
-  | Some val
+let add_lookup env val0_opt var1 var2 =
+  match val0_opt with
+  | Some val0
       when let Some val1 <- lookup env var1
       when let Some val2 <- lookup env var2
-        -> val + val1 + val2
+        -> val0 + val1 + val2
   | _ -> 0
 
 ```
@@ -449,12 +449,12 @@ I'll argue that it's important for the guard pattern and the case body to appear
 I'll use program as a running example:
 
 ```ocaml
-let add_lookup env val_opt var1 var2 =
-  match val_opt with
-  | Some val
+let add_lookup env val0_opt var1 var2 =
+  match val0_opt with
+  | Some val0
       when lookup env var1 match Some val1
       when lookup env var2 match Some val2 ->
-        val + val1 + val2
+        val0 + val1 + val2
   | _ -> 0
 ```
 
@@ -469,12 +469,12 @@ There is a directly analogous feature in Haskell. Here's what the above program
 would look like:
 
 ```haskell
-addLookup env val_opt var1 var2 =
-  case val_opt of
-    Just val
+addLookup env val0_opt var1 var2 =
+  case val0_opt of
+    Just val0
       | Just val1 <- lookup env var1
       , Just val2 <- lookup env var2
-      -> val + val1 + val2
+      -> val0 + val1 + val2
     _ -> 0
 ```
 
@@ -511,12 +511,12 @@ this RFC.
 See [this work](https://github.com/JohnReppy/compiling-pattern-guards/blob/master/ml19-paper.pdf).
 
 ```sml
-fun add_lookup env val_opt var1 var2 =
-  case val_opt of
-    Some val
+fun add_lookup env val0_opt var1 var2 =
+  case val0_opt of
+    Some val0
       with Some val1 = lookup env var1
       with Some val2 = lookup env var2 =>
-        val + val1 + val2
+        val0 + val1 + val2
   | _ => 0
 ```
 
