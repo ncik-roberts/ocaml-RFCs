@@ -146,8 +146,8 @@ match expr with
 ```
 
 To make it clearer how this corresponds to the BNF in the earlier section,
-I'll write the equivalent program, but with the optional vertical bar and
-surround the case with parens:
+I'll write the equivalent program, but adding the optional vertical bar and
+surrounding the case with parens:
 
 ```ocaml
 match expr with
@@ -253,7 +253,7 @@ val find_matching_case : context -> value -> case list -> (context * expr) optio
 
 Suppose we're given some simple primitives:
 
-```
+```ocaml
 (* Match a value against a pattern. Adds the bound variables to the
    input context to form the output context.
 *)
@@ -460,7 +460,7 @@ let add_lookup env val0_opt var1 var2 =
 
 **Form of "pattern guard":** `'when' expr 'match' pat`\
 **Form of boolean guard:** `'when' expr`\
-**Form of single-case-only guarded RHSes:** `guard+ -> expr`\
+**Form of single-case-only guarded RHSes:** `guard+ '->' expr`\
 **Can pattern-guarded RHSes have multiple cases?** Yes.
 
 ### Haskell
