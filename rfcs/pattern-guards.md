@@ -316,19 +316,19 @@ outer match.
 
 There is a question of whether a warning should be raised in either of these cases:
   - the inner cases are exhaustive.
-  - the inner cases are *non-*exhaustive.
+  - the inner cases are *non*-exhaustive.
 
 The discussion on [gasche's blog post][gasche] considers some arguments. I expect
 this is something we will continue to discuss in the RFC comments. In the meantime,
 I'll summarize the existing arguments:
 
   - (In favor of warning for exhaustive matches.) The essential feature of pattern
-    guards is that their cases are *non-*exhaustive; otherwise, you could just write
+    guards is that their cases are *non*-exhaustive; otherwise, you could just write
     a normal `match` expression. Writing an exhaustive pattern guard is using *too*
     expressive of a feature than is required, which might be suggestive of a programming
     error. There is analogy between this and the warning that's raised on `let
     rec f () = ...` where `f` is used nowhere in its definition.
-  - (In favor of warning for *non-*exhaustive matches.) It's a common programming error
+  - (In favor of warning for *non*-exhaustive matches.) It's a common programming error
     to write a non-exhaustive match where you intend to match exhaustively.
 
 ## Prior art
